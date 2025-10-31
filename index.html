@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Care At Home 🏥 - منصة طبية</title>
+
+  <!-- ملف الستايل -->
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- EmailJS SDK (لازم يبقى موجود في الصفحة) -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand">
+      <span class="logo">🏥</span>
+      <div>
+        <h1>Care <strong>At Home</strong></h1>
+        <p class="tag">منصتك الطبية المتكاملة</p>
+      </div>
+    </div>
+
+    <div class="search-area">
+      <input id="doctor-search" type="search" placeholder="ابحث باسم الطبيب أو التخصص..." />
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- الأطباء -->
+    <section id="doctors-section">
+      <h2>الأطباء المتاحين</h2>
+      <div id="doctor-list" class="doctor-grid"></div>
+    </section>
+
+    <!-- حجز الموعد -->
+    <section id="booking">
+      <h2>حجز موعد</h2>
+      <form id="booking-form" autocomplete="off">
+        <label>اختر الطبيب:
+          <select id="doctor-select" required>
+            <option value="">-- اختر الطبيب --</option>
+          </select>
+        </label>
+
+        <div class="row">
+          <label>التاريخ:
+            <input type="date" id="appointment-date" required />
+          </label>
+
+          <label>الوقت:
+            <input type="time" id="appointment-time" required />
+          </label>
+        </div>
+
+        <label>ملاحظات:
+          <textarea id="note" rows="3" placeholder="اكتب ملاحظاتك أو الاعراض باختصار..."></textarea>
+        </label>
+
+        <button type="submit" class="primary-btn">احجز الآن</button>
+        <p id="booking-result" class="result" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <!-- تواصل معنا -->
+    <section id="contact">
+      <h2>تواصل معنا</h2>
+      <form id="contact-form" autocomplete="off">
+        <input id="contact-name" type="text" placeholder="اسمك" required />
+        <input id="contact-email" type="email" placeholder="بريدك الإلكتروني" required />
+        <textarea id="contact-message" placeholder="اكتب رسالتك..." required></textarea>
+        <button type="submit" class="primary-btn">إرسال</button>
+        <p id="contact-result" class="result" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>© 2025 Care At Home | جميع الحقوق محفوظة</p>
+  </footer>
+
+  <!-- فقاعة الشات -->
+  <div id="chat-bubble" title="افتح الدردشة">💬</div>
+
+  <!-- نافذة الشات -->
+  <div id="chat-window" class="hidden" role="dialog" aria-live="polite">
+    <div id="chat-header">
+      <h3>🤖 CareBot</h3>
+      <button id="close-chat" aria-label="إغلاق">✖</button>
+    </div>
+
+    <div id="chat-messages" role="log" aria-atomic="false"></div>
+
+    <div id="chat-input">
+      <input id="user-message" type="text" placeholder="اكتب سؤالك الطبي..." />
+      <button id="send-btn">إرسال</button>
+    </div>
+  </div>
+
+  <!-- أصوات (تربط ملفات محلية) -->
+  <!-- ضع open.mp3 و send.mp3 داخل فولدر sounds/ -->
+  <audio id="sound-open" src="sounds/open.mp3" preload="auto"></audio>
+  <audio id="sound-send" src="sounds/send.mp3" preload="auto"></audio>
+
+  <!-- ملف الجافاسكربت الرئيسي -->
+  <script src="script.js"></script>
+</body>
+</html>
+
