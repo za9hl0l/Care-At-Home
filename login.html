@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تسجيل دخول الأدمن</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { text-align: center; padding: 50px; }
+    input { margin: 10px 0; }
+  </style>
+</head>
+<body>
+  <h1>🔐 تسجيل دخول الأدمن</h1>
+  <form id="loginForm">
+    <input type="text" id="username" placeholder="اسم المستخدم" required><br>
+    <input type="password" id="password" placeholder="كلمة المرور" required><br>
+    <button type="submit">تسجيل الدخول</button>
+  </form>
+  <p id="loginMsg"></p>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const msg = document.getElementById("loginMsg");
+
+    form.addEventListener("submit", e => {
+      e.preventDefault();
+      const user = document.getElementById("username").value;
+      const pass = document.getElementById("password").value;
+
+      if (user === "admin" && pass === "12345") {
+        sessionStorage.setItem("adminLogged", true);
+        window.location.href = "dashboard.html";
+      } else {
+        msg.textContent = "❌ اسم المستخدم أو كلمة المرور غير صحيحة";
+        msg.style.color = "red";
+      }
+    });
+  </script>
+</body>
+</html>

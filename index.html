@@ -1,108 +1,51 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Care At Home 🏥 - منصة طبية</title>
-
-  <!-- ملف الستايل -->
-  <link rel="stylesheet" href="styles.css" />
-
-  <!-- EmailJS SDK (لازم يبقى موجود في الصفحة) -->
-  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Care At Home</title>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <span class="logo">🏥</span>
-      <div>
-        <h1>Care <strong>At Home</strong></h1>
-        <p class="tag">منصتك الطبية المتكاملة</p>
-      </div>
-    </div>
-
-    <div class="search-area">
-      <input id="doctor-search" type="search" placeholder="ابحث باسم الطبيب أو التخصص..." />
-    </div>
+  <header>
+    <h1>Care At Home 🏥</h1>
+    <p>منصتك الطبية الكاملة لحجز الأطباء والخدمات المنزلية</p>
   </header>
 
-  <main class="container">
-    <!-- الأطباء -->
-    <section id="doctors-section">
-      <h2>الأطباء المتاحين</h2>
-      <div id="doctor-list" class="doctor-grid"></div>
-    </section>
+  <section class="booking">
+    <h2>احجز طبيبك الآن</h2>
+    <input type="text" id="searchDoctor" placeholder="ابحث باسم الطبيب...">
+    <select id="doctorList">
+      <option value="">اختر الطبيب</option>
+      <option>حسن السعيد - قلب</option>
+      <option>زغلول حسن - مخ وأعصاب</option>
+      <option>أحمد عكاشة - نفسي</option>
+      <option>محمد عبد الله - عظام</option>
+      <option>إبراهيم يوسف - أطفال</option>
+      <option>محمود السيد - جلدية</option>
+      <option>ياسر أحمد - أسنان</option>
+      <option>سارة علي - نساء وتوليد</option>
+    </select>
+    <button id="bookBtn">احجز الآن</button>
+    <p id="bookMsg"></p>
+  </section>
 
-    <!-- حجز الموعد -->
-    <section id="booking">
-      <h2>حجز موعد</h2>
-      <form id="booking-form" autocomplete="off">
-        <label>اختر الطبيب:
-          <select id="doctor-select" required>
-            <option value="">-- اختر الطبيب --</option>
-          </select>
-        </label>
+  <section class="contact">
+    <h2>تواصل معنا 💬</h2>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="الاسم الكامل" required>
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required>
+      <textarea id="message" placeholder="اكتب رسالتك هنا..." required></textarea>
+      <button type="submit">إرسال</button>
+    </form>
+    <p id="statusMsg"></p>
+  </section>
 
-        <div class="row">
-          <label>التاريخ:
-            <input type="date" id="appointment-date" required />
-          </label>
-
-          <label>الوقت:
-            <input type="time" id="appointment-time" required />
-          </label>
-        </div>
-
-        <label>ملاحظات:
-          <textarea id="note" rows="3" placeholder="اكتب ملاحظاتك أو الاعراض باختصار..."></textarea>
-        </label>
-
-        <button type="submit" class="primary-btn">احجز الآن</button>
-        <p id="booking-result" class="result" aria-live="polite"></p>
-      </form>
-    </section>
-
-    <!-- تواصل معنا -->
-    <section id="contact">
-      <h2>تواصل معنا</h2>
-      <form id="contact-form" autocomplete="off">
-        <input id="contact-name" type="text" placeholder="اسمك" required />
-        <input id="contact-email" type="email" placeholder="بريدك الإلكتروني" required />
-        <textarea id="contact-message" placeholder="اكتب رسالتك..." required></textarea>
-        <button type="submit" class="primary-btn">إرسال</button>
-        <p id="contact-result" class="result" aria-live="polite"></p>
-      </form>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <p>© 2025 Care At Home | جميع الحقوق محفوظة</p>
-  </footer>
-
-  <!-- فقاعة الشات -->
-  <div id="chat-bubble" title="افتح الدردشة">💬</div>
-
-  <!-- نافذة الشات -->
-  <div id="chat-window" class="hidden" role="dialog" aria-live="polite">
-    <div id="chat-header">
-      <h3>🤖 CareBot</h3>
-      <button id="close-chat" aria-label="إغلاق">✖</button>
-    </div>
-
-    <div id="chat-messages" role="log" aria-atomic="false"></div>
-
-    <div id="chat-input">
-      <input id="user-message" type="text" placeholder="اكتب سؤالك الطبي..." />
-      <button id="send-btn">إرسال</button>
-    </div>
+  <!-- 🔐 زر دخول الأدمن -->
+  <div class="admin-login">
+    <a href="dashboard.html" class="admin-btn">دخول الأدمن</a>
   </div>
 
-  <!-- أصوات (تربط ملفات محلية) -->
-  <!-- ضع open.mp3 و send.mp3 داخل فولدر sounds/ -->
-  <audio id="sound-open" src="sounds/open.mp3" preload="auto"></audio>
-  <audio id="sound-send" src="sounds/send.mp3" preload="auto"></audio>
-
-  <!-- ملف الجافاسكربت الرئيسي -->
   <script src="script.js"></script>
 </body>
 </html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة تحكم الأدمن | Care At Home</title>
+  <link rel="stylesheet" href="styles.css">
+  <style>
+    body { background-color: #0d1117; color: #e6edf3; text-align: center; padding: 20px; }
+    h1 { color: #58a6ff; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #161b22;
+      border-radius: 10px;
+      margin-top: 20px;
+    }
+    th, td {
+      border: 1px solid #30363d;
+      padding: 10px;
+    }
+    th { background: #21262d; color: #58a6ff; }
+    td { color: #c9d1d9; }
+    .logout-btn {
+      background: #da3633;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      margin: 20px;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+    .logout-btn:hover { background: #f85149; }
+  </style>
+</head>
+<body>
+  <h1>📊 لوحة تحكم الأدمن</h1>
+  <table id="messagesTable">
+    <thead>
+      <tr>
+        <th>الاسم</th>
+        <th>البريد الإلكتروني</th>
+        <th>الرسالة</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <button class="logout-btn" onclick="logout()">🔒 تسجيل خروج</button>
+
+  <script>
+    const adminLogged = sessionStorage.getItem("adminLogged");
+    if (!adminLogged) {
+      window.location.href = "login.html";
+    }
+
+    const tableBody = document.querySelector("#messagesTable tbody");
+    const messages = JSON.parse(localStorage.getItem("contactMessages")) || [];
+
+    if (messages.length === 0) {
+      tableBody.innerHTML = "<tr><td colspan='3'>لا توجد رسائل بعد 📭</td></tr>";
+    } else {
+      messages.forEach(msg => {
+        const row = document.createElement("tr");
+        row.innerHTML = `<td>${msg.name}</td><td>${msg.email}</td><td>${msg.message}</td>`;
+        tableBody.appendChild(row);
+      });
+    }
+
+    function logout() {
+      sessionStorage.removeItem("adminLogged");
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+</html>
