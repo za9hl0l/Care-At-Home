@@ -1,76 +1,130 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لوحة تحكم الأدمن | Care At Home</title>
-  <link rel="stylesheet" href="styles.css">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Dashboard - Care At Home</title>
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    body { background-color: #0d1117; color: #e6edf3; text-align: center; padding: 20px; }
-    h1 { color: #58a6ff; }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: #161b22;
-      border-radius: 10px;
-      margin-top: 20px;
-    }
-    th, td {
-      border: 1px solid #30363d;
-      padding: 10px;
-    }
-    th { background: #21262d; color: #58a6ff; }
-    td { color: #c9d1d9; }
-    .logout-btn {
-      background: #da3633;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      margin: 20px;
-      border-radius: 10px;
-      cursor: pointer;
-    }
-    .logout-btn:hover { background: #f85149; }
+    .admin-wrap{max-width:1100px;margin:18px auto;padding:12px}
+    .top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .stat-grid{display:flex;gap:12px;flex-wrap:wrap}
+    .stat-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01));padding:12px;border-radius:10px;min-width:160px}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{padding:8px;border:1px solid rgba(255,255,255,0.03);text-align:right}
+    th{background:rgba(255,255,255,0.02);color:var(--blue)}
+    .controls{display:flex;gap:8px}
+    .btn-export{background:var(--blue);color:white;padding:8px;border-radius:8px;border:none;cursor:pointer}
+    .btn-clear{background:#ef4444;color:white;padding:8px;border-radius:8px;border:none;cursor:pointer}
+    .btn-logout{background:#0f1720;color:var(--blue);border:1px solid var(--blue);padding:8px;border-radius:8px;cursor:pointer}
   </style>
 </head>
 <body>
-  <h1>📊 لوحة تحكم الأدمن</h1>
-  <table id="messagesTable">
-    <thead>
-      <tr>
-        <th>الاسم</th>
-        <th>البريد الإلكتروني</th>
-        <th>الرسالة</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+  <header class="site-header">
+    <div class="brand"><div class="logo-wrap" aria-hidden="true"><svg class="logo-icon" viewBox="0 0 64 64" width="40" height="40"><rect rx="10" ry="10" width="64" height="64" fill="#0b1220"/><path d="M32 12 L36 24 L48 24 L38 30 L42 42 L32 34 L22 42 L26 30 L16 24 L28 24 Z" fill="#3b82f6"/></svg></div><div class="brand-text"><h1>لوحة التحكم</h1><p class="tag">Care At Home - Admin</p></div></div>
+    <nav class="main-nav"><button class="btn-logout" onclick="logout()">تسجيل خروج</button></nav>
+  </header>
 
-  <button class="logout-btn" onclick="logout()">🔒 تسجيل خروج</button>
+  <main class="admin-wrap">
+    <div class="top">
+      <div>
+        <h2>لوحة الإدارة</h2>
+        <p class="tag">عرض الحجوزات والرسائل وتصدير البيانات</p>
+      </div>
+      <div class="controls">
+        <button class="btn-export" onclick="exportCSV()">⬇️ تصدير CSV</button>
+        <button class="btn-clear" onclick="clearAll()">🗑️ حذف الكل</button>
+      </div>
+    </div>
+
+    <section style="margin-top:16px">
+      <div class="stat-grid">
+        <div class="stat-card"><h4>المستخدمون</h4><p id="statUsers">0</p></div>
+        <div class="stat-card"><h4>الأطباء</h4><p id="statDoctors">0</p></div>
+        <div class="stat-card"><h4>الحجوزات</h4><p id="statBookings">0</p></div>
+      </div>
+    </section>
+
+    <section style="margin-top:18px">
+      <h3>📩 رسائل التواصل</h3>
+      <table id="msgsTable"><thead><tr><th>الاسم</th><th>البريد</th><th>الرسالة</th><th>الوقت</th></tr></thead><tbody></tbody></table>
+    </section>
+
+    <section style="margin-top:18px">
+      <h3>📅 الحجوزات</h3>
+      <table id="bookingsTable"><thead><tr><th>الاسم</th><th>الهاتف</th><th>الطبيب</th><th>تاريخ</th><th>وقت</th><th>ملاحظة</th></tr></thead><tbody></tbody></table>
+    </section>
+  </main>
 
   <script>
-    const adminLogged = sessionStorage.getItem("adminLogged");
-    if (!adminLogged) {
+    // auth guard
+    if(!sessionStorage.getItem("care_admin")){
       window.location.href = "login.html";
     }
 
-    const tableBody = document.querySelector("#messagesTable tbody");
-    const messages = JSON.parse(localStorage.getItem("contactMessages")) || [];
+    // load data from localStorage keys used in script.js
+    const BOOKINGS_KEY = "care_bookings_v1";
+    const MESSAGES_KEY = "care_messages_v1";
 
-    if (messages.length === 0) {
-      tableBody.innerHTML = "<tr><td colspan='3'>لا توجد رسائل بعد 📭</td></tr>";
-    } else {
-      messages.forEach(msg => {
-        const row = document.createElement("tr");
-        row.innerHTML = `<td>${msg.name}</td><td>${msg.email}</td><td>${msg.message}</td>`;
-        tableBody.appendChild(row);
+    function load(k){ return JSON.parse(localStorage.getItem(k) || "[]"); }
+
+    function renderStats(){
+      const bookings = load(BOOKINGS_KEY);
+      const messages = load(MESSAGES_KEY);
+      document.getElementById("statBookings").innerText = bookings.length;
+      document.getElementById("statUsers").innerText = Math.max(50, Math.floor(Math.random()*300)); // placeholder
+      document.getElementById("statDoctors").innerText = 10; // from DOCTORS list
+    }
+
+    function renderMessages(){
+      const msgs = load(MESSAGES_KEY);
+      const tbody = document.querySelector("#msgsTable tbody");
+      tbody.innerHTML = "";
+      if(!msgs.length) tbody.innerHTML = "<tr><td colspan='4'>لا توجد رسائل بعد</td></tr>";
+      msgs.forEach(m=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${escapeHtml(m.name)}</td><td>${escapeHtml(m.email)}</td><td>${escapeHtml(m.message)}</td><td>${new Date(m.createdAt).toLocaleString()}</td>`;
+        tbody.appendChild(tr);
       });
     }
 
-    function logout() {
-      sessionStorage.removeItem("adminLogged");
-      window.location.href = "index.html";
+    function renderBookings(){
+      const books = load(BOOKINGS_KEY);
+      const tbody = document.querySelector("#bookingsTable tbody");
+      tbody.innerHTML = "";
+      if(!books.length) tbody.innerHTML = "<tr><td colspan='6'>لا توجد حجوزات بعد</td></tr>";
+      books.forEach(b=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${escapeHtml(b.patient)}</td><td>${escapeHtml(b.phone)}</td><td>${escapeHtml(b.doctorName)}</td><td>${b.date}</td><td>${b.time||""}</td><td>${escapeHtml(b.note||"")}</td>`;
+        tbody.appendChild(tr);
+      });
     }
+
+    function clearAll(){
+      if(!confirm("هل أنت متأكد من حذف كل البيانات؟")) return;
+      localStorage.removeItem(BOOKINGS_KEY);
+      localStorage.removeItem(MESSAGES_KEY);
+      renderAll();
+    }
+
+    function logout(){ sessionStorage.removeItem("care_admin"); window.location.href="login.html"; }
+
+    function exportCSV(){
+      const msgs = load(MESSAGES_KEY);
+      const books = load(BOOKINGS_KEY);
+      let rows = [["type","name","email","phone","doctor","date","time","note","createdAt"]];
+      msgs.forEach(m=> rows.push(["message", m.name, m.email, "", "", "", "", m.message, m.createdAt]));
+      books.forEach(b=> rows.push(["booking", b.patient, "", b.phone, b.doctorName, b.date, b.time||"", b.note||"", b.createdAt]));
+      const csv = rows.map(r=> r.map(c=> `"${String(c||"").replace(/"/g,'""')}"`).join(",")).join("\n");
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a"); a.href = url; a.download = "care-data.csv"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+
+    function escapeHtml(s){ if(!s) return ""; return String(s).replace(/[&<>"']/g, m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#039;"}[m])); }
+
+    function renderAll(){ renderStats(); renderMessages(); renderBookings(); }
+    renderAll();
   </script>
 </body>
 </html>
