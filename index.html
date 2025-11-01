@@ -1,116 +1,95 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Care At Home | المنصة الطبية</title>
-  <link rel="stylesheet" href="styles.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Care At Home | الرعاية في بيتك</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <header class="site-header">
-    <div class="brand">
-      <!-- Logo: icon + name -->
-      <div class="logo-wrap" aria-hidden="true">
-        <svg class="logo-icon" viewBox="0 0 64 64" width="40" height="40" xmlns="http://www.w3.org/2000/svg" role="img">
-          <rect rx="10" ry="10" width="64" height="64" fill="#0b1220"/>
-          <path d="M32 12 L36 24 L48 24 L38 30 L42 42 L32 34 L22 42 L26 30 L16 24 L28 24 Z" fill="#3b82f6"/>
-        </svg>
-      </div>
-      <div class="brand-text">
-        <h1>Care <span>At Home</span></h1>
-        <p class="tag">رعايتك تبدأ من بيتك</p>
-      </div>
+  <!-- ===== الهيدر ===== -->
+  <header class="header">
+    <div class="logo">
+      <span class="neon">Care <span>At Home</span></span>
+      <p>الرعاية الطبية عندك في البيت</p>
     </div>
-
-    <nav class="main-nav">
+    <nav>
+      <a href="#about">عن المنصة</a>
       <a href="#doctors">الأطباء</a>
-      <a href="#booking">الحجز</a>
-      <a href="#contact">تواصل</a>
-      <a href="login.html" class="admin-link">لوحة التحكم</a>
+      <a href="#booking">حجز موعد</a>
+      <a href="#contact">تواصل معنا</a>
+      <a href="login.html" class="login-btn">تسجيل الدخول</a>
     </nav>
   </header>
 
-  <main class="container">
-    <section id="hero" class="hero">
-      <div class="hero-card">
-        <h2>رعايتك تبدأ من هنا</h2>
-        <p>احجز استشارتك الطبية بسهولة واحصل على رعاية في منزلك.</p>
-        <div class="hero-actions">
-          <button onclick="scrollToSection('doctors')" class="btn-primary">ابحث عن طبيب</button>
-          <button onclick="scrollToSection('booking')" class="btn-ghost">احجز موعد</button>
-        </div>
+  <!-- ===== عن المنصة ===== -->
+  <section id="about" class="section">
+    <h2>منصة Care At Home</h2>
+    <p>منصة طبية متكاملة بتقدملك أفضل الأطباء في كل التخصصات،  
+      تقدر تحجز، تتواصل، وتتابع حالتك بسهولة وأمان تام.</p>
+  </section>
+
+  <!-- ===== الأطباء ===== -->
+  <section id="doctors" class="section">
+    <h2>اختر طبيبك</h2>
+    <input type="text" id="searchDoctor" placeholder="ابحث عن الطبيب بالاسم...">
+    <div class="doctor-list">
+      <div class="doctor-card">
+        <img src="https://i.ibb.co/4P3Q7mW/doctor1.jpg" alt="د. حسن السعيد">
+        <h3>د. حسن السعيد</h3>
+        <p>أخصائي باطنة</p>
       </div>
-    </section>
-
-    <section id="doctors" class="card-section">
-      <h3>🩺 الأطباء</h3>
-      <div class="search-row">
-        <input id="searchDoctor" type="search" placeholder="ابحث باسم الطبيب أو التخصص..." aria-label="بحث عن طبيب" />
+      <div class="doctor-card">
+        <img src="https://i.ibb.co/tcZPRXp/doctor2.jpg" alt="د. زغلول حسن">
+        <h3>د. زغلول حسن</h3>
+        <p>جراحة عامة</p>
       </div>
-      <div id="doctorList" class="grid"></div>
-    </section>
-
-    <section id="booking" class="card-section">
-      <h3>📅 حجز موعد</h3>
-      <form id="bookingForm" class="form" autocomplete="off">
-        <input id="patientName" type="text" placeholder="الاسم الكامل" required />
-        <input id="patientPhone" type="tel" placeholder="رقم الموبايل" required />
-        <select id="doctorSelect" required><option value="">-- اختر الطبيب --</option></select>
-        <div class="row">
-          <input id="appointmentDate" type="date" required />
-          <input id="appointmentTime" type="time" required />
-        </div>
-        <textarea id="appointmentNote" placeholder="ملاحظات (اختياري)"></textarea>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">تأكيد الحجز</button>
-          <p id="bookingResult" class="result" aria-live="polite"></p>
-        </div>
-      </form>
-    </section>
-
-    <section id="contact" class="card-section">
-      <h3>✉️ تواصل معنا</h3>
-      <form id="contactForm" class="form" autocomplete="off">
-        <input id="contactName" type="text" placeholder="اسمك" required />
-        <input id="contactEmail" type="email" placeholder="بريدك الإلكتروني" required />
-        <textarea id="contactMsg" placeholder="اكتب رسالتك..." required></textarea>
-        <div class="form-actions">
-          <button type="submit" class="btn-primary">إرسال</button>
-          <p id="contactResult" class="result" aria-live="polite"></p>
-        </div>
-      </form>
-    </section>
-  </main>
-
-  <!-- Chatbot (right bottom) -->
-  <div class="chatbot-container" aria-hidden="false">
-    <button id="chatToggle" class="chat-toggle" aria-label="افتح الشات">💬</button>
-
-    <aside id="chatBox" class="chatbox hidden" role="dialog" aria-label="مساعد CareBot">
-      <header class="chatbox-header">
-        <div>CareBot 🤖</div>
-        <button id="closeChat" class="chat-close" aria-label="إغلاق">✖</button>
-      </header>
-
-      <div id="chatBody" class="chatbox-body" role="log" aria-live="polite">
-        <div class="bot-msg">أهلاً! اكتب سؤالك هنا أو اطلب حجزًا (مثال: "أريد حجز مع حسن").</div>
+      <div class="doctor-card">
+        <img src="https://i.ibb.co/7jD8tRh/doctor3.jpg" alt="د. أحمد عكاشة">
+        <h3>د. أحمد عكاشة</h3>
+        <p>أمراض نفسية</p>
       </div>
+    </div>
+  </section>
 
-      <div class="chatbox-input">
-        <input id="chatInput" type="text" placeholder="اكتب رسالتك..." aria-label="اكتب رسالتك" />
-        <button id="chatSend" class="send-small" aria-label="إرسال">ارسال</button>
-      </div>
-    </aside>
+  <!-- ===== الحجز ===== -->
+  <section id="booking" class="section">
+    <h2>احجز موعدك الآن</h2>
+    <form id="bookingForm">
+      <input type="text" placeholder="اسمك الكامل" required>
+      <input type="email" placeholder="بريدك الإلكتروني" required>
+      <input type="text" placeholder="التخصص المطلوب" required>
+      <input type="date" required>
+      <button type="submit">تأكيد الحجز</button>
+    </form>
+  </section>
+
+  <!-- ===== تواصل معنا ===== -->
+  <section id="contact" class="section">
+    <h2>تواصل معنا</h2>
+    <form id="contactForm">
+      <input type="text" placeholder="اسمك" required>
+      <input type="email" placeholder="بريدك الإلكتروني" required>
+      <textarea placeholder="اكتب رسالتك هنا..." required></textarea>
+      <button type="submit">إرسال</button>
+    </form>
+  </section>
+
+  <!-- ===== أيقونة البوت ===== -->
+  <div id="chatIcon">💬</div>
+
+  <!-- ===== صندوق الدردشة ===== -->
+  <div id="chatBox" class="hidden">
+    <div class="chat-header">مساعد Care At Home 🤖</div>
+    <div class="chat-body" id="chatBody">
+      <div class="bot-msg">أهلاً بيك! أنا هنا أساعدك 😊</div>
+    </div>
+    <div class="chat-input">
+      <input type="text" id="userInput" placeholder="اكتب سؤالك هنا...">
+      <button id="sendBtn">إرسال</button>
+    </div>
   </div>
-
-  <footer class="site-footer">
-    <div class="footer-left">
-      <p>© 2025 Care At Home</p>
-    </div>
-    <div class="footer-right">
-      <small>Designed by Hassan</small>
-    </div>
-  </footer>
 
   <script src="script.js"></script>
 </body>

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل الدخول | Care At Home</title>
+  <title>تسجيل حساب جديد | Care At Home</title>
   <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
@@ -14,19 +14,20 @@
     }
     body {
       background-color: #0a0f1c;
+      color: #fff;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       overflow: hidden;
     }
-    .login-box {
+    .signup-box {
       background: rgba(20, 25, 40, 0.9);
       padding: 40px;
       border-radius: 15px;
       box-shadow: 0 0 25px rgba(0, 195, 255, 0.3);
       width: 360px;
-      text-align: center;
+      position: relative;
       animation: glow 2s infinite alternate;
     }
     @keyframes glow {
@@ -34,9 +35,10 @@
       to { box-shadow: 0 0 35px #00ffff; }
     }
     h2 {
+      text-align: center;
+      margin-bottom: 25px;
       color: #00ffff;
-      margin-bottom: 20px;
-      font-size: 26px;
+      font-size: 24px;
     }
     input, select {
       width: 100%;
@@ -44,12 +46,12 @@
       margin: 10px 0;
       border: none;
       border-radius: 8px;
+      outline: none;
       background: #111729;
       color: #fff;
-      outline: none;
       transition: 0.3s;
     }
-    input:focus, select:focus {
+    input:focus {
       box-shadow: 0 0 8px #00ffff;
     }
     button {
@@ -67,9 +69,9 @@
       background: linear-gradient(45deg, #00ffff, #007bff);
     }
     p {
+      text-align: center;
       margin-top: 15px;
       font-size: 14px;
-      color: #ccc;
     }
     a {
       color: #00ffff;
@@ -78,44 +80,46 @@
   </style>
 </head>
 <body>
-  <div class="login-box">
-    <h2>تسجيل الدخول</h2>
-    <form id="loginForm">
-      <input type="text" id="username" placeholder="اسم المستخدم" required />
+  <div class="signup-box">
+    <h2>تسجيل حساب جديد</h2>
+    <form id="signupForm">
+      <input type="text" id="name" placeholder="الاسم الكامل" required />
+      <input type="email" id="email" placeholder="البريد الإلكتروني" required />
       <input type="password" id="password" placeholder="كلمة المرور" required />
-      <select id="role" required>
+      <select id="userType" required>
         <option value="">اختر نوع الحساب</option>
         <option value="user">مستخدم</option>
         <option value="doctor">طبيب</option>
         <option value="admin">مدير</option>
       </select>
-      <button type="submit">دخول</button>
+      <button type="submit">تسجيل</button>
     </form>
-    <p>ليس لديك حساب؟ <a href="signup.html">إنشاء حساب جديد</a></p>
+    <p>لديك حساب بالفعل؟ <a href="login.html">تسجيل الدخول</a></p>
   </div>
 
+  <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
   <script>
-    document.getElementById("loginForm").addEventListener("submit", function(e) {
+    (function(){
+      emailjs.init("YOUR_PUBLIC_KEY"); // ضع مفتاحك هنا من EmailJS
+    })();
+
+    document.getElementById("signupForm").addEventListener("submit", function(e) {
       e.preventDefault();
+      
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const userType = document.getElementById("userType").value;
 
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const role = document.getElementById("role").value;
-
-      // بيانات الدخول الأساسية المؤقتة
-      const validUser = username === "za9hl0l" && password === "za9hl0l";
-
-      if (validUser) {
-        if (role === "admin") {
-          window.location.href = "dashboard.html";
-        } else if (role === "doctor") {
-          window.location.href = "doctor-dashboard.html";
-        } else {
-          window.location.href = "index.html";
-        }
-      } else {
-        alert("اسم المستخدم أو كلمة المرور غير صحيحة ❌");
-      }
+      emailjs.send("YOUR_SERVICE_ID", "YOUR_TEMPLATE_ID", {
+        to_email: email,
+        user_name: name,
+        user_type: userType
+      }).then(() => {
+        alert("تم إرسال رابط التفعيل إلى بريدك الإلكتروني ✅");
+      }).catch((error) => {
+        alert("حدث خطأ أثناء الإرسال ❌");
+        console.error(error);
+      });
     });
   </script>
 </body>
